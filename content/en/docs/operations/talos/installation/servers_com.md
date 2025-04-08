@@ -162,7 +162,7 @@ machine:
     nodeIP:
       validSubnets:
         - 192.168.100.0/24
-  network
+  network:
     interfaces:
       - deviceSelector:
           busPath: "0000:02:00.1"
@@ -175,7 +175,7 @@ machine:
           busPath: "0000:02:00.0"
         addresses:
           - 192.168.100.11/24
-            vip:
+        vip:
           ip: 192.168.100.10
   install:
     disk: /dev/sdb
