@@ -20,6 +20,12 @@ weight: 36
          oidc-groups-claim: "groups"
    ```
 
+   **For Talm**
+   Add to your `values.yaml` in talm repo:
+   ```yaml
+   oidcIssuerUrl: "https://keycloak.<YOUR_ROOT_DOMAIN>/realms/cozy"
+   ```
+
 2. **Domain Reachability**  
    Ensure that the domain `keycloak.example.org` is accessible from the cluster and resolves to your root ingress controller.
 
