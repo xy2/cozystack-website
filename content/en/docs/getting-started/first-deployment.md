@@ -2,7 +2,7 @@
 title: "Deploy and Configure Cozystack"
 linkTitle: "Deploy and Configure Cozystack"
 description: "Learn how to get a running Cozystack cluster on bare metal or VMs in a series of guided steps."
-weight: 10
+weight: 30
 ---
 
 This tutorial shows how to bootstrap Cozystack on a few servers in your infrastructure.
