@@ -1,7 +1,7 @@
 ---
 title: "About Cozystack framework"
-linkTitle: "Deploy and Configure Cozystack"
-description: "Learn how to get a running Cozystack cluster on bare metal or VMs in a series of guided steps."
+linkTitle: "What is Cozystack?"
+description: "Target audience, key features and benefits of Cozystack framework."
 weight: 10
 ---
 
@@ -11,6 +11,10 @@ and tuned to work seamlessly with each other. The virtualization platform is als
 hardware servers. You get your virtual machines right in Kubernetes. Another powerful feature is
 the [tenant](/docs/guides/concepts/#tenant-system) system that allows you to isolate teams, individual developers or
 even companies in their own fully-functional space, all on the same hardware.
+
+The Cozystack framework can be used by a single company to run its own cloud, or by a service provider to provide the
+platform as a service to multiple customers. The gentle learning curve also allows individual developers to learn
+Kubernetes by using their own instance of the Cozystack platform.
 
 Key features
 ------------
