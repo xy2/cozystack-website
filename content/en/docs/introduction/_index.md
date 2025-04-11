@@ -1,8 +1,8 @@
 ---
-title: "About Cozystack framework"
-linkTitle: "What is Cozystack?"
+title: "Introduction to Cozystack"
+linkTitle: "Introduction"
 description: "Target audience, key features and benefits of Cozystack framework."
-weight: 10
+weight: 9
 ---
 
 Cozystack is a Kubernetes-based framework for building a complete cloud environment on your (or rented) hardware.
