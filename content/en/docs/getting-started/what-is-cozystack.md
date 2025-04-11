@@ -9,8 +9,8 @@ Cozystack is a Kubernetes-based framework for building a complete cloud environm
 Numerous components that are usually installed in Kubernetes clusters are already included in the Cozystack framework
 and tuned to work seamlessly with each other. The virtualization platform is also included and does not require extra
 hardware servers. You get your virtual machines right in Kubernetes. Another powerful feature is
-the [tenant](/docs/guides/concepts/#tenant-system) system that allows you to isolate teams, individual developers or
-even companies in their own fully-functional space, all on the same hardware.
+the [tenant]({{% ref "/docs/guides/concepts/#tenant-system" %}}) system that allows you to isolate teams, individual
+developers or even companies in their own fully-functional space, all on the same hardware.
 
 The Cozystack framework can be used by a single company to run its own cloud, or by a service provider to provide the
 platform as a service to multiple customers. The gentle learning curve also allows individual developers to learn
@@ -55,5 +55,5 @@ address on limited hardware, but all databases are running with direct access to
 
 We do not know another Kubernetes distribution that has more infrastructure components included (seriously, send us
 a link if you find one!). Instead of installing all the components and controllers, you just choose
-a [bundle](/docs/operations/bundles/) that fits your needs. All the components are pre-configured and tested to work
-with each other. Components get updates along with the Cozystack framework.
+a [bundle]({{% ref "/docs/operations/bundles/" %}}) that fits your needs. All the components are pre-configured and
+tested to work with each other. Components get updates along with the Cozystack framework.

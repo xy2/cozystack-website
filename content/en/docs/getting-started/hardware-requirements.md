@@ -36,11 +36,11 @@ storage and other traffic to different sets of network cards.
 
 ## Distributed cluster
 
-With some tuning, it's possible to create a [distributed cluster](/docs/operations/stretched/) with Cozystack. The
-common requirements are fast and reliable network **AND** low RTT (run ping command between locations to check what is
-the actual RTT). The *acceptable* RTT value is 10ms at max. Kubernetes is not designed to run in the network with big
-latency. Several datacenters in a single city usually have less than 1ms latency, which is fine. And it's absolutely
-unacceptable to run Kubernetes and replicated storage over the network with RTT more than 20ms.
+With some tuning, it's possible to create a [distributed cluster]({{% ref "/docs/operations/stretched/" %}}) with
+Cozystack. The common requirements are fast and reliable network **AND** low RTT (run ping command between locations to
+check what is the actual RTT). The *acceptable* RTT value is 10ms at max. Kubernetes is not designed to run in the
+network with big latency. Two datacenters in a single city usually have less than 1ms latency, which is fine. And
+it's absolutely unacceptable to run Kubernetes and replicated storage over the network with RTT more than 20ms.
 
 It's also recommended to have at least 2-3 nodes per datacenter in a distributed cluster. So, if the whole datacenter
 connectivity is broken, the cluster will survive the outage without much pain.
