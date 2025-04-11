@@ -9,7 +9,7 @@ Cozystack is a Kubernetes-based framework for building a complete cloud environm
 Numerous components that are usually installed in Kubernetes clusters are already included in the Cozystack framework
 and tuned to work seamlessly with each other. The virtualization platform is also included and does not require extra
 hardware servers. You get your virtual machines right in Kubernetes. Another powerful feature is
-the [tenant]({{% ref "/docs/guides/concepts/#tenant-system" %}}) system that allows you to isolate teams, individual
+the [tenant]({{% ref "/docs/guides/concepts#tenant-system" %}}) system that allows you to isolate teams, individual
 developers or even companies in their own fully-functional space, all on the same hardware.
 
 The Cozystack framework can be used by a single company to run its own cloud, or by a service provider to provide the
