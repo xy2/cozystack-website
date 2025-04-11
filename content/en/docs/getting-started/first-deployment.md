@@ -446,7 +446,7 @@ NAME                      TYPE           CLUSTER-IP     EXTERNAL-IP       PORT(S
 root-ingress-controller   LoadBalancer   10.96.16.141   192.168.100.200   80:31632/TCP,443:30113/TCP   3m33s
 ```
 
-**Cozystack Dashboard**
+#### Cozystack Dashboard
 
 If you want to access dashboard via root-ingress controller, you can enable this option:
 
@@ -463,7 +463,7 @@ Get authentification token from `tenant-root`:
 kubectl get secret -n tenant-root tenant-root -o go-template='{{ printf "%s\n" (index .data "token" | base64decode) }}'
 ```
 
-**Grafana**
+#### Grafana
 
 Use `grafana.example.org` (under 192.168.100.200) to access system monitoring, where `example.org` is your domain specified for `tenant-root`
 
