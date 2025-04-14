@@ -11,22 +11,10 @@ This tutorial shows how to bootstrap Cozystack on a few servers in your infrastr
 
 ![Cozystack deployment](/img/cozystack-deployment.png)
 
-Deploying Cozystack requires three physical servers or VMs with nested virtualization, having these resources:
+Deploying Cozystack requires three physical servers or VMs with nested virtualization enabled.
 
-```yaml
-CPU: 4 cores
-CPU model: host
-RAM: 16 GB
-HDD1: 32 GB
-HDD2: 100GB (raw)
-```
-
-A PXE installation requires an extra management VM or physical server connected to the same network,
-with any Linux system installed on it (for example, Ubuntu should be enough).
-
-{{% alert color="warning" %}}
-:warning: This VM should support `x86-64-v2` architecture, which most probably can be achived by setting CPU model to `host`
-{{% /alert %}}
+If you want to perform a PXE installation, then an extra host is required. It must be connected to the same network and
+must run Linux system. Any distribution should work. For example, Ubuntu is sufficient.
 
 ## Objectives
 
@@ -42,7 +30,7 @@ with any Linux system installed on it (for example, Ubuntu should be enough).
 Cozystack installs on top of a Kubernetes cluster. Talos is the only Kubernetes distribution that is fully supported by
 Cozystack.
 
-### Talos Linux Installation
+### Install Talos Linux
 
 Boot your machines with Talos Linux image in one of these ways:
 
@@ -53,10 +41,9 @@ Boot your machines with Talos Linux image in one of these ways:
 
 ### Bootstrap Talos cluster
 
-Bootstrap your Talos Linux cluster using one of the following tools:
-
-- [**talos-bootstrap**](/docs/operations/talos/configuration/talos-bootstrap/), for a quick walkthrough.
-- [**Talm**](/docs/operations/talos/configuration/talm/), offering declarative cluster management.
+Bootstrap your Talos Linux cluster according to Cozystack requirements. We recommend to
+use [Talm]({{% ref "/docs/operations/talos/configuration/talm/" %}}) tool that offers declarative cluster management.
+Use the `cozystack` template as a starting point to create your own configuration templates
 
 ### Other Kubernetes distributions
 
@@ -75,7 +62,8 @@ These are the most important settings:
 Write a config for Cozystack, referring to the [bundles documentation](/docs/operations/bundles/) for configuration parameters.
 
 {{% alert color="warning" %}}
-:warning: make sure that to have the same settings specified in `patch.yaml` and `patch-controlplane.yaml` files.
+:warning: Make sure that settings like CIDRs and URLs match the corresponding settings specified in the Talos
+configuration.
 {{% /alert %}}
 
 ```yaml
@@ -171,17 +159,21 @@ tenant-root                      tenant-root                 4m1s   True    Rele
 
 ## Configure Storage
 
-Setup alias to access LINSTOR:
+Setup an alias to access LINSTOR:
+
 ```bash
 alias linstor='kubectl exec -n cozy-linstor deploy/linstor-controller -- linstor'
 ```
 
-list your nodes
+(or just use the [kubectl-linstor](https://github.com/piraeusdatastore/kubectl-linstor) plugin).
+
+List Linstor nodes (in general case, this list must match your Kubernetes node list):
+
 ```bash
 linstor node list
 ```
 
-example output:
+Example output:
 
 ```console
 +-------------------------------------------------------+
@@ -193,13 +185,14 @@ example output:
 +-------------------------------------------------------+
 ```
 
-list empty devices:
+List available empty devices:
 
 ```bash
 linstor physical-storage list
 ```
 
-example output:
+Example output:
+
 ```console
 +--------------------------------------------+
 | Size         | Rotational | Nodes          |
@@ -210,11 +203,7 @@ example output:
 +--------------------------------------------+
 ```
 
-
-create storage pools:
-
-
-
+Create storage pools:
 
 {{< tabs name="create_storage_pools" >}}
 {{% tab name="ZFS" %}}
@@ -234,13 +223,13 @@ linstor ps cdp lvm srv3 /dev/sdb --pool-name data --storage-pool data
 {{% /tab %}}
 {{< /tabs >}}
 
-list storage pools:
+List storage pools that were created:
 
 ```bash
 linstor sp l
 ```
 
-example output:
+Example output:
 
 ```console
 +-------------------------------------------------------------------------------------------------------------------------------------+
@@ -255,8 +244,13 @@ example output:
 +-------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
+Create storage classes.
 
-Create default storage classes:
+{{% alert color="info" %}}
+Most applications will use the default storage class. Some Cozystack applications have the "replicated" storage class
+set as the default, so make sure to create it too.
+{{% /alert %}}
+
 ```yaml
 kubectl create -f- <<EOT
 ---
@@ -293,13 +287,13 @@ allowVolumeExpansion: true
 EOT
 ```
 
-list storageclasses:
+List storage classes:
 
 ```bash
 kubectl get storageclasses
 ```
 
-example output:
+Example output:
 ```console
 NAME              PROVISIONER              RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 local (default)   linstor.csi.linbit.com   Delete          WaitForFirstConsumer   true                   11m
