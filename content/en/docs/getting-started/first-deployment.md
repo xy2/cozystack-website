@@ -45,6 +45,11 @@ Bootstrap your Talos Linux cluster according to Cozystack requirements. We recom
 use [Talm]({{% ref "/docs/operations/talos/configuration/talm/" %}}) tool that offers declarative cluster management.
 Use the `cozystack` template as a starting point to create your own configuration templates
 
+{{% alert color="info" %}}
+Kubernetes nodes will be shown as `NotReady` at this moment. This is expected, as there is no yet CNI installed. Nodes
+will become `Ready` after Cozystack installation.
+{{% /alert %}}
+
 ### Other Kubernetes distributions
 
 If you bootstrap your Talos cluster in your own way, or even try to use a different Kubernetes distribution, make sure
@@ -64,6 +69,10 @@ Write a config for Cozystack, referring to the [bundles documentation](/docs/ope
 {{% alert color="warning" %}}
 :warning: Make sure that settings like CIDRs and URLs match the corresponding settings specified in the Talos
 configuration.
+{{% /alert %}}
+
+{{% alert color="warning" %}}
+:warning: Ensure you have access to the root-host domain DNS.
 {{% /alert %}}
 
 ```yaml
@@ -159,6 +168,9 @@ tenant-root                      tenant-root                 4m1s   True    Rele
 
 ## Configure Storage
 
+Storage pools and storage classes can be specific to your environment. We recommend using the default names listed here
+unless something specific is required, so further instructions will work without modifications.
+
 Setup an alias to access LINSTOR:
 
 ```bash
@@ -167,7 +179,7 @@ alias linstor='kubectl exec -n cozy-linstor deploy/linstor-controller -- linstor
 
 (or just use the [kubectl-linstor](https://github.com/piraeusdatastore/kubectl-linstor) plugin).
 
-List Linstor nodes (in general case, this list must match your Kubernetes node list):
+Check that Linstor nodes are up (in a standard setup, this list must match your Kubernetes node list):
 
 ```bash
 linstor node list
@@ -222,6 +234,9 @@ linstor ps cdp lvm srv3 /dev/sdb --pool-name data --storage-pool data
 ```
 {{% /tab %}}
 {{< /tabs >}}
+
+If you run `linstor physical-storage list` again, you should see the empty list. That's correct, as the devices are now
+bound to the storage pool
 
 List storage pools that were created:
 
@@ -302,6 +317,9 @@ replicated        linstor.csi.linbit.com   Delete          Immediate            
 
 ## Configure Networking
 
+Additional IPs are required to publish the actual workload. At least one IP is required for ingress, but it's
+recommended using a pool, as each VM will require its own IP.
+
 Cozystack is using MetalLB as the default load balancer.
 This documentation section explains how to configure networking with this default option.
 
@@ -352,15 +370,30 @@ spec:
   avoidBuggyIPs: false
 ```
 
-## Setup Basic Applications
+## Setup Infrastructure Applications
 
-Enable `etcd`, `monitoring`, and `ingress` in your `tenant-root`:
+Each tenant can have its own full set of applications, including monitoring. The root tenant is a special tenant that is
+used to manage the entire cluster. For cluster-wide monitoring, enable it in the root tenant. For per-tenant monitoring, enable it in the target tenant.
+
+The monitoring and ingress can work only when storage and networking are configured. Both that parts are
+environment-specific and can't be configured by the installer. As previous steps are completed, you can enable
+monitoring now.
+
+Example how to enable monitoring in the root tenant:
 
 ```bash
 kubectl patch -n tenant-root tenants.apps.cozystack.io root --type=merge -p '
 {"spec":{
   "ingress": true,
   "monitoring": true,
+}}'
+```
+
+If you want to run workload in the root tenant, you can enable `etcd` and `isolated` in your `tenant-root`:
+
+```bash
+kubectl patch -n tenant-root tenants.apps.cozystack.io root --type=merge -p '
+{"spec":{
   "etcd": true,
   "isolated": true
 }}'
@@ -368,13 +401,14 @@ kubectl patch -n tenant-root tenants.apps.cozystack.io root --type=merge -p '
 
 ## Final steps
 
-Check persistent volumes provisioned:
+Check that persistent volumes provisioned:
 
 ```bash
 kubectl get pvc -n tenant-root
 ```
 
-example output:
+Example output:
+
 ```console
 NAME                                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
 data-etcd-0                              Bound    pvc-4cbd29cc-a29f-453d-b412-451647cd04bf   10Gi       RWO            local          <unset>                 2m10s
@@ -392,7 +426,7 @@ vmstorage-db-vmstorage-shortterm-0       Bound    pvc-cee3a2a4-5680-4880-bc2a-85
 vmstorage-db-vmstorage-shortterm-1       Bound    pvc-d55c235d-cada-4c4a-8299-e5fc3f161789   10Gi       RWO            local          <unset>                 2m41s
 ```
 
-Check all pods are running:
+Check that all pods are in `Running` status:
 
 
 ```bash
@@ -452,7 +486,8 @@ kubectl patch -n tenant-root ingresses.apps.cozystack.io ingress --type=merge -p
 
 Use `dashboard.example.org` (under 192.168.100.200) to access system dashboard, where `example.org` is your domain specified for `tenant-root`
 
-Get authentification token from `tenant-root`:
+Get authentication token from `tenant-root`:
+
 ```bash
 kubectl get secret -n tenant-root tenant-root -o go-template='{{ printf "%s\n" (index .data "token" | base64decode) }}'
 ```
