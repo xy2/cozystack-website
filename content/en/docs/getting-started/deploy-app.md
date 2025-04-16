@@ -235,8 +235,9 @@ dashboard. It contains the secrets with kubeconfig file for the nested Kubernete
 
 ## Update DNS and access the cluster
 
-The nested Kubernetes cluster will take one of the floating IPs from the main cluster. You can check the ingress status
-using your tenant kubeconfig to get the actual IP. Update DNS settings to match the ingress name and IP address.
+The nested Kubernetes cluster will take one of the floating IPs from the main cluster. You can check the actual dns name
+and taken IP address on the Application page in the dashboard, or by checking the ingress status with kubectl. Update
+DNS settings to match the ingress name and IP address.
 
 When DNS records are updated, you can access the nested Kubernetes cluster using the downloaded kubeconfig file.
 
