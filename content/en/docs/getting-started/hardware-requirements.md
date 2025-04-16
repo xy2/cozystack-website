@@ -14,8 +14,8 @@ only. It's not possible to "share" a server with other services.
 
 Here are the baseline requirements for running a proof-of-concept installation:
 
-* Three physical or virtual servers of amd64/x86_64 architecture, 16 GB RAM each
-* We recommend having at least 4 CPU cores per server
+* Three physical or virtual servers of amd64/x86_64 architecture, 24 GB RAM each.
+* We recommend having at least 4 CPU cores per server.
 * If servers are virtualized, ensure that nested virtualization is enabled, and the CPU model is set to `host` without
   emulation.
 * The primary disk should be at least 32GB. Talos Linux will use it for the operating system, images and logs. Having
