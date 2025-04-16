@@ -42,7 +42,7 @@ Boot your machines with Talos Linux image in one of these ways:
 ### Bootstrap Talos cluster
 
 Bootstrap your Talos Linux cluster according to Cozystack requirements. We recommend to
-use [Talm]({{% ref "/docs/operations/talos/configuration/talm/" %}}) tool that offers declarative cluster management.
+use [Talm]({{% ref "/docs/operations/talos/configuration/talm" %}}) tool that offers declarative cluster management.
 Use the `cozystack` template as a starting point to create your own configuration templates
 
 {{% alert color="info" %}}
