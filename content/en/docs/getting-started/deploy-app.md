@@ -21,8 +21,8 @@ itself is Kubernetes-native (i.e., has a Helm chart) and is not a part of Cozyst
 We will need a running Cozystack installation. You can use
 the [installation guide]({{% ref "/docs/getting-started/first-deployment" %}}) to install it.
 
-The Cozystack dashboard should be accessible. You are not obliged to use it in the future, but using the dashboard is
-the easiest way to learn the Cozystack platform features.
+The Cozystack dashboard should be accessible. You can also use `kubectl` instead, but using the dashboard is the easiest
+way to learn about the Cozystack platform features.
 
 Client credentials are required to access the dashboard and/or tenant namespace of the main Kubernetes cluster.
 
@@ -75,11 +75,9 @@ cluster. This resembles the behavior of a managed database service like AWS RDS 
    tenant. Name is the only thing you can't change later.
 6. When finished with parameters, click the `Deploy` button again. The application will be installed in the client
    tenant namespace.
-
 {{% /tab %}}
 
 {{% tab name="with kubectl" %}}
-
 Create a manifest `postgres.yaml` with the following content:
 
 ```yaml
@@ -121,11 +119,23 @@ kubectl apply -f postgres.yaml
 ```
 
 The contents of manifest can be copied from the resource that was created in the dashboard and then edited.
-
 {{% /tab %}}
 {{< /tabs >}}
 
-TODO show how secrets copied to the nested kubernetes
+After an application is installed and ready, the "Application Resources" section will be filled with connect
+credentials.
+
+The "Secrets" tab will contain the database password for each user defined.
+
+The "Services" tab will contain the service addresses. Use the `postgres-<name>-ro` service name to connect to the
+readonly replica, and the `postgres-<name>-rw` service name to connect to the master instance of the database. These
+names are resolvable from the nested Kubernetes cluster.
+
+If you need to have access to the database from outside the cluster, update the `external` parameter to `true`. After
+that, the `postgres-<name>-external-write` service will be created with an external IP. You can use it to connect to the
+database using CLI or GUI from anywhere in the internet.
+
+Do not allow external access to the database if you do not need it.
 
 ## Create a cache service
 
@@ -260,6 +270,6 @@ kubernetes-dev-md0-vn8dh-xhsvl   Ready    ingress-nginx   25m   v1.30.11
 ## Deploy an application with helm
 
 The rest of journey is the same as with any other Kubernetes cluster. You can use `kubectl` or `helm` or your CI/CD
-system to deploy kubernetes-native applications. The passwords for the database and redis are stored in the kubernetes
-secrets. You can copy-paste them once to your application, or create a reference to existing secret to get them
-automatically on deployment.
+system to deploy kubernetes-native applications. Fill the credentials to the database and cache in the application helm
+chart values. Then run `helm upgrade --install` as usual. Service names do not need to have any dns suffixes, as if they
+existed in the same namespace.
